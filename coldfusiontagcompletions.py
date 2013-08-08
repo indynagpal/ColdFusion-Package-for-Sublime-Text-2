@@ -19,7 +19,8 @@ class CloseCftagCommand(sublime_plugin.TextCommand):
         sel = self.view.sel()[0]
 
         # insert the actual &gt; character
-        self.view.insert(edit, sel.end(), ">")
+        for region in self.view.sel():
+            self.view.insert(edit, region.end(), ">")
 
         # prevents auto_complete pop up from triggering
         self.view.run_command("hide_auto_complete")
@@ -43,7 +44,10 @@ class CloseCftagCommand(sublime_plugin.TextCommand):
             tagdata = tagdata.pop(0).split(" ")
             tagname = tagdata[0]
 
-        if self.view.match_selector(sel.end(),"meta.tag.block.cf") and tagdata[-1].find("/") == -1:
+        if self.view.match_selector(sel.end(),"meta.tag.block.cf")  \
+            and not self.view.substr(sel.end() - 1) == "/" \
+            and not tagname[0] == "/":
+
             if not tagname[-1] == ">":
                 tagname = tagname + ">"
             if not SETTINGS.get("auto_indent_on_close") or tagname == "cfoutput>":
@@ -66,6 +70,10 @@ class TagAutoComplete(sublime_plugin.EventListener):
         if SETTINGS.get("verbose_tag_completions"):
             return
 
+        sel = view.sel()[0]
+        if view.substr(sel.begin() - 1) == ".":
+            return []
+
         pt = locations[0] - len(prefix) - 1
         # view.match_selector being bonky so we're going nuclear here
         if any(s in view.scope_name(pt) for s in ["meta.tag.block.cf","meta.tag.inline.cf","string","comment"]):
@@ -82,7 +90,7 @@ class TagAutoComplete(sublime_plugin.EventListener):
 
 class TagAttributeAutoComplete(sublime_plugin.EventListener):
     cflib = get_class()()
-    valid_scopes_tags = ["meta.tag.inline.cf", "meta.tag.block.cf"]
+    valid_scopes_tags = ["meta.tag"]
 
     def on_modified(self, view):
         if SETTINGS.get("verbose_tag_completions"):
