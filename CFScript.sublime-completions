@@ -159,6 +159,7 @@
         { "trigger": "getEncoding\tfn. (cfscript)", "contents": "getEncoding(${1:\"${2:scope_name}\"})"},
         { "trigger": "getException\tfn. (cfscript)", "contents": "getException(${1:${2:javaobject}})"},
         { "trigger": "getFileFromPath\tfn. (cfscript)", "contents": "getFileFromPath(${1:\"${2:path}\"})"},
+        { "trigger": "getFileInfo\tfn. (cfscript)", "contents": "getFileFromPath(${1:\"${2:path}\"})"},
         { "trigger": "getFunctionList\tfn. (cfscript)", "contents": "getFunctionList(${1:})"},
         { "trigger": "getGatewayHelper\tfn. (cfscript)", "contents": "getGatewayHelper(${1:\"${2:gatewayID}\"})"},
         { "trigger": "getHTTPRequestData\tfn. (cfscript)", "contents": "getHTTPRequestData(${1:})"},
